@@ -1,0 +1,90 @@
+﻿@model IEnumerable<SearchForDriversWebApp.Models.User>
+
+<body style="background-color: #EBEFF2;">
+
+    <h2 class="text-center">Керування користувачами</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ПІБ</th>
+                <th>Email</th>
+                <th>Телефон</th>
+                <th>Роль</th>
+                <th>Видалити</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.Email</td>
+                    <td>@user.Phone</td>
+                    <td>
+                        <form asp-action="ChangeRole" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@user.Id" />
+
+                            <div class="form-group" style="display:flex;">
+                                @if (user.Role == "User" || user.Role == "Driver")
+                                {
+                                    <select class="form-control" name="newRole" style="margin-right: 5px;">
+                                        @if (user.Role == "User")
+                                        {
+                                            <option selected value="User">User</option>
+                                            <option value="Driver">Driver</option>
+                                        }
+                                        else if (user.Role == "Driver")
+                                        {
+                                            <option value="User">User</option>
+                                            <option selected value="Driver">Driver</option>
+                                        }
+
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Змінити роль</button>
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" readonly value="@user.Role" style="margin-right: 5px;" />
+                                    <button type="submit" class="btn btn-primary">Змінити роль</button>
+                                }
+
+
+                            </div>
+
+                        </form>
+                    </td>                
+                    <td>
+                        <a class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal-@user.Id">Delete</a>
+
+                        <div class="modal fade" id="confirmDeleteModal-@user.Id" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmDeleteModalLabel">Підтвердження видалення</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Ви точно бажаєте видалити користувача @user.Username?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <form asp-action="DeleteUser" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@user.Id" />
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>

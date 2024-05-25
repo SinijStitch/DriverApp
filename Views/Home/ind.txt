@@ -1,0 +1,180 @@
+@model SearchForDriversWebApp.ViewModels.TripModel
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <div id="map" style="height: 400px; width:100%"></div>
+
+<form asp-action="Index" method="post">
+    <div class="form-group">
+        <label asp-for="DepartureLocation"></label>
+        <input asp-for="DepartureLocation" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="ArrivalLocation"></label>
+        <input asp-for="ArrivalLocation" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="Distance"></label>
+        <input asp-for="Distance" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <input asp-for="Status" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Зберегти</button>
+</form>
+
+    <script type="text/javascript">
+        var map = L.map('map').setView([0, 0], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var form = document.getElementById("addressForm");
+
+        var address1Input = document.getElementById("DepartureLocation");
+        var address2Input = document.getElementById("ArrivalLocation");
+
+        var awesomplete1 = new Awesomplete(address1Input, {
+            list: [],
+            minChars: 2
+        });
+
+        var awesomplete2 = new Awesomplete(address2Input, {
+            list: [],
+            minChars: 2
+        });
+
+        address1Input.addEventListener("input", function () {
+            var address = address1Input.value;
+            if (address.trim() !== "") {
+                fetchSuggestions(address, function (suggestions) {
+                    awesomplete1.list = suggestions;
+                });
+            }
+        });
+
+        address2Input.addEventListener("input", function () {
+            var address = address2Input.value;
+            if (address.trim() !== "") {
+                fetchSuggestions(address, function (suggestions) {
+                    awesomplete2.list = suggestions;
+                });
+            }
+        });
+        function fetchSuggestions(address, callback) {
+            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + address + '&limit=5')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var suggestions = data.map(function (item) {
+                        return item.display_name;
+                    });
+                    callback(suggestions);
+                })
+                .catch(function (error) {
+                    console.log('Помилка запиту до служби геокодування: ' + error);
+                });
+        }
+        function geocodeAddress(address) {
+            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + address + '&limit=2')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data && data.length > 0) {
+                        var lat = parseFloat(data[0].lat);
+                        var lng = parseFloat(data[0].lon);
+
+                        L.marker([lat, lng]).addTo(map)
+                            .bindPopup('Address: ' + address + '<br>Latitude: ' + lat + '<br>Longitude: ' + lng)
+                            .openPopup();
+
+                        map.setView([lat, lng], 13);
+                    } else {
+                        alert('Адресу не знайдено.');
+                    }
+                })
+                .catch(function (error) {
+                    console.log('Помилка запиту до служби геокодування: ' + error);
+                });
+        }
+        var distanceResultElement = document.getElementById("distanceResult");
+
+        // Додаємо обробник події для подання форми
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Запобігаємо стандартній поведінці форми
+
+            // Отримуємо значення введених адрес
+            var address1 = address1Input.value;
+            var address2 = address2Input.value;
+            // Отримайте координати для обох адрес
+            getCoordinates(address1, function (coord1) {
+                getCoordinates(address2, function (coord2) {
+                    // Обчисліть відстань між координатами
+                    var distance = calculateDistance(coord1.lat, coord1.lon, coord2.lat, coord2.lon);
+                    // Виведіть відстань на сторінці
+                    distanceResultElement.value = distance.toFixed(2);
+                    alert(distance.toFixed(2));
+                });
+            });
+            // Викликаємо функцію для геокодування обох адрес
+            geocodeAddress(address1);
+            geocodeAddress(address2);
+        });
+        function getCoordinates(address, callback) {
+            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + address + '&limit=1')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data    && data.length > 0) {
+                        var lat = parseFloat(data[0].lat);
+                        var lon = parseFloat(data[0].lon);
+                        callback({ lat: lat, lon: lon });
+                    } else {
+                        alert('Адресу не знайдено.');
+                    }
+                })
+                .catch(function (error) {
+                    console.log('Помилка запиту до служби геокодування: ' + error);
+                });
+        }
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371; // Радіус Землі в кілометрах
+            var dLat = deg2rad(lat2 - lat1);
+            var dLon = deg2rad(lon2 - lon1);
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            var distance = R * c;
+            return distance;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+    </script>
+</body>
+</html>

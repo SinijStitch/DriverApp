@@ -1,0 +1,98 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+
+
+    <style>
+        .leaflet-control-geocoder-form input[type="text"] {
+            width: 300px;
+            padding: 5px;
+        }
+
+        .crosshair-cursor-enabled {
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+    <div id="map" style="height: 400px;"></div>
+
+    <form>
+        <label for="pickupAddress">Пункт виїзду:</label>
+        <input type="text" id="pickupAddress" name="pickupAddress"><br>
+
+        <label for="destinationAddress">Пункт призначення:</label>
+        <input type="text" id="destinationAddress" name="destinationAddress"><br>
+
+        <button type="button" onclick="findTaxi()">Знайти таксі</button>
+    </form>
+
+    <script type="text/javascript">
+        var map = L.map('map').setView([51.505, -0.09], 13); // Початкові координати та масштаб карти
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var pickupMarker, destinationMarker;
+
+        function findTaxi() {
+            var pickupAddress = document.getElementById('pickupAddress').value;
+            var destinationAddress = document.getElementById('destinationAddress').value;
+
+            // Ви можете використовувати сервіс геокодування для перетворення адреси в координати
+            // Тут використовуйте pickupAddress та destinationAddress для взаємодії з сервісом геокодування
+
+            // Припустимо, що отримані координати для пункту виїзду та призначення зберігаються у змінних pickupLatLng та destinationLatLng
+            var pickupLatLng = [51.505, -0.09]; // Припустимі координати для прикладу
+            var destinationLatLng = [51.51, -0.1]; // Припустимі координати для прикладу
+
+            // Видаліть попередні маркери, якщо вони існують
+            if (pickupMarker) {
+                map.removeLayer(pickupMarker);
+            }
+            if (destinationMarker) {
+                map.removeLayer(destinationMarker);
+            }
+
+            // Додайте маркери на карту для пункту виїзду та призначення
+            pickupMarker = L.marker(pickupLatLng).addTo(map).bindPopup('Пункт виїзду');
+            destinationMarker = L.marker(destinationLatLng).addTo(map).bindPopup('Пункт призначення');
+
+            // Змініть центр карти та масштаб, щоб відобразити обидва маркери
+            var bounds = new L.LatLngBounds(pickupLatLng, destinationLatLng);
+            map.fitBounds(bounds);
+        }
+        $(document).ready(function () {
+            // Ініціалізуйте Typeahead для полів вводу адрес
+            var pickupAddressInput = $('#pickupAddress');
+            var destinationAddressInput = $('#destinationAddress');
+
+            pickupAddressInput.typeahead({
+                source: function (query, process) {
+                    // Здійснюйте AJAX-запит для отримання підказок з сервера
+                    // Наприклад, використовуйте сервіс геокодування для пошуку адрес
+                    // та повертайте список підказок для введеного запиту
+                    $.ajax({
+                        url: '/Home/GetAddresses', // URL для отримання підказок
+                        method: 'GET',
+                        data: { query: query },
+                        success: function (data) {
+                            process(data); // Повертаємо список підказок
+                        }
+                    });
+                }
+            });
+
+            // Повторіть той самий процес для поле вводу destinationAddressInput
+            destinationAddressInput.typeahead({
+                source: function (query, process) {
+                    // Аналогічно здійсніть AJAX-запит для отримання підказок для призначення
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

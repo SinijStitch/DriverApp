@@ -1,0 +1,93 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = SearchForDriversWebApp
+build_property.RootNamespace = SearchForDriversWebApp
+build_property.ProjectDir = C:\Users\cherv\OneDrive\Desktop\Червоний диплом.записка.тези\SearchForDriversWebApp\SearchForDriversWebApp\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\cherv\OneDrive\Desktop\Червоний диплом.записка.тези\SearchForDriversWebApp\SearchForDriversWebApp
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Admin/AssignDriver.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQXNzaWduRHJpdmVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Admin/Trips.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVHJpcHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Admin/UserManagement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlck1hbmFnZW1lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Home/AssignmentTrips.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBc3NpZ25tZW50VHJpcHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Home/CreateTrip.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDcmVhdGVUcmlwLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Home/GetAddresses.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxHZXRBZGRyZXNzZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Home/NotFound.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxOb3RGb3VuZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Home/UserTrips.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxVc2VyVHJpcHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Profile/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Shared/NotFound.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXE5vdEZvdW5kLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/cherv/OneDrive/Desktop/Червоний диплом.записка.тези/SearchForDriversWebApp/SearchForDriversWebApp/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-cny2ichk2y

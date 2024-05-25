@@ -1,0 +1,32 @@
+﻿@model IEnumerable<SearchForDriversWebApp.Models.Trip>
+
+<body style="background-color: #EBEFF2;">
+
+    <h2 class="text-center">Перегляд поїздок</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>Відстань</th>
+                <th>Дата</th>
+                <th>Статус</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var trip in Model)
+            {
+                <tr>
+                    <td>@trip.DepartureLocation</td>
+                    <td>@trip.ArrivalLocation</td>
+                    <td>@trip.Distance км</td>
+                    <td>@trip.DateOfTrip</td>
+                    <td>@trip.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>

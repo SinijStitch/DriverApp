@@ -1,0 +1,30 @@
+﻿<!-- Views/Admin/AssignDriver.cshtml -->
+@model SearchForDriversWebApp.ViewModels.AssignDriverViewModel
+
+
+<h2 class="text-center">Призначити водія</h2>
+
+<p>Пункт A: <strong>@Model.DepartureLocation</strong></p>
+<p>Пункт B: <strong>@Model.ArrivalLocation</strong></p>
+<p>Відстань: <strong>@Model.Distance км</strong></p>
+<form asp-action="AssignDriver" method="post" >
+    <input type="hidden" asp-for="TripId" />
+    <div class="form-group">
+        <label for="driverId">Виберіть водія:</label>
+        <select class="form-control" id="driverId" name="driverId">
+            <option value="">-- Виберіть водія --</option>
+            @foreach (var driver in Model.AvailableDrivers)
+            {
+                <option value="@driver.Id">@driver.Email</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="price">Ціна:</label>
+        <input type="number" class="form-control" id="price" name="price" />
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary" style="width: 60%;">Призначии</button>
+    </div>
+
+</form>

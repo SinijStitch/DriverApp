@@ -1,0 +1,29 @@
+﻿@model List<SearchForDriversWebApp.Models.Trip>
+
+<h2>Керування поїздками</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>Відстань</th>
+            <th>Статус</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var trip in Model)
+        {
+            <tr>
+                <td>@trip.DepartureLocation</td>
+                <td>@trip.ArrivalLocation</td>
+                <td>@trip.Distance км</td>
+                <td>@trip.Status</td>
+                <td>
+                    <a type="submit" class="btn btn-primary" asp-action="AssignDriver" asp-route-tripId="@trip.Id">Признати водія</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

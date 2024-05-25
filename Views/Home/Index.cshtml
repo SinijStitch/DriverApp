@@ -1,0 +1,302 @@
+﻿@using SearchForDriversWebApp.ViewModels;
+@model TripModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="" />
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<style>
+    #map-container {
+        position: relative;
+    }
+    #map-form {
+        position: absolute;
+        top: 25%;
+        left: 10%;
+        z-index: 1000;
+        width: 400px;
+        background-color: whitesmoke;
+        padding: 20px;
+        border-radius: 30px;
+        z-index: 2000; /* Збільште z-index форми, щоб вона була поверх карти */
+    }
+
+        .ui-autocomplete {
+            z-index: 3000;
+            background-color: #ccc; /* Додайте бажаний колір фону, наприклад, сірий (#ccc) */
+            max-height: 200px; /* Додайте максимальну висоту, якщо потрібно */
+            overflow-y: auto; /* Додайте прокрутку, якщо список занадто великий */
+            max-width: 350px;
+        }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        transition: all 0.3s;
+        pointer-events: none;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn-success{
+        width:100%;
+    }
+
+    input.not-empty + label,
+    input:focus + label {
+        top: -20px;
+        font-size: 14px;
+    }
+
+    #Distance + label {
+        top: -20px;
+        font-size: 14px;
+    }
+</style>
+</head>
+<body style="background-color: #EBEFF2;">
+    <div id="map-container" >
+    <form id="map-form" method="post" action="/Home/Index">
+        <div class="form-group">
+            <input type="text" name="DepartureLocation" id="DepartureLocation" required />
+            <label for="DepartureLocation">Точка А</label>
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="ArrivalLocation" id="ArrivalLocation" required />
+            <label for="ArrivalLocation">Точка B</label>
+        </div>
+
+
+            <div class="form-group">
+                <div class="input-container-date">
+                    <input type="datetime-local" class="input-date" name="DateOfTrip" id="DateOfTrip" required />
+                    <label for="DateOfTrip">Дата поїздки</label>
+                </div>
+            </div>
+
+        <div class="form-group distance-form-group">
+            <div class="distance-input-container">
+                <input type="text" class="distance-input" name="Distance" id="Distance" required />
+                <label for="Distance" class="distance-label">Distance</label>
+            </div>
+        </div>
+
+            <style>
+                .distance-form-group {
+                    position: relative;
+                    margin-bottom: 20px;
+                }
+
+                .distance-input-container {
+                    position: relative;
+                }
+
+                .distance-input {
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 16px;
+                    border: none;
+                    background-color: transparent;
+                    
+                }
+
+                .distance-label {
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    font-size: 16px;
+                    pointer-events: none;
+                    transition: all 0.3s;
+                }
+
+                .distance-input:focus + .distance-label {
+                    top: -20px;
+                    font-size: 14px;
+                }
+
+                .input-container-date {
+                    position: relative;
+                    margin-bottom: 20px;
+                }
+
+                .input-date {
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 16px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                }
+
+                    .input-date + label {
+                        position: absolute;
+                        top: 10px;
+                        left: 10px;
+                        transition: all 0.3s;
+                        pointer-events: none;
+                    }
+
+                    .input-date.not-empty + label,
+                    .input-date + label {
+                        top: -20px;
+                        font-size: 14px;
+                    }
+            </style>
+
+            <button class="btn btn-success" onclick="updateLabel()" type="submit">Cтворити поїздку</button>
+    </form>
+
+        <!-- Карти залишаються незміненими -->
+        <div id="map" style="height: 500px;" hidden></div>
+        <div id="defaultMap" style="height: 500px;"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var defaultMap = L.map('defaultMap').setView([50, 30], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(defaultMap);
+        });
+
+        var inputFields = $('#DepartureLocation, #ArrivalLocation, #Distance, #Status');
+
+        // Додайте слухача подій на кожне поле вводу
+        inputFields.on('input', function () {
+            // Якщо поле вводу не є порожнім, додайте клас 'not-empty', інакше видаліть його
+            if ($(this).val().trim() !== '') {
+                $(this).addClass('not-empty');
+            } else {
+                $(this).removeClass('not-empty');
+            }
+        });
+
+        var address1Coordinates;
+        var address2Coordinates;
+
+        function getAddresses(request, response) {
+            $.ajax({
+                url: `https://nominatim.openstreetmap.org/search?format=json&q=${request.term}&limit=5`,
+                type: 'GET',
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        var coordinates = {
+                            label: item.display_name,
+                            value: item.display_name,
+                            latitude: item.lat,
+                            longitude: item.lon
+                        };
+
+                        return coordinates;
+                    }));
+                }
+            });
+        }
+
+
+        $('#DepartureLocation, #ArrivalLocation').autocomplete({
+            source: getAddresses,
+            minLength: 2,
+            select: function (event, ui) {
+                // Обробка вибору адреси, якщо потрібно
+                console.log('Selected Address:', ui.item);
+
+                // Встановіть координати для відповідного адресу
+                if (event.target.id === 'DepartureLocation') {
+                        address1Coordinates = ui.item;
+                } else if (event.target.id === 'ArrivalLocation') {
+                        address2Coordinates = ui.item;
+                }
+
+                // Перевірте, чи обидва адреси вже вибрані перед ініціалізацією карти
+                if (address1Coordinates && address2Coordinates) {
+                    showMap();
+                }
+            // Встановлення значення в поле вводу після вибору адреси
+            $(this).val(ui.item.label);
+
+            // Зупинка стандартної обробки події вибору, щоб значення не з'являлося двічі
+            return false;
+            }
+        });
+
+        var dist = '0';
+
+        function updateLabel() {
+            const inputDistance = document.getElementById('Distance');
+            //inputDistance.value = distance.toFixed(0) + ' км';
+            if (inputDistance.value.includes(' км')) {
+                inputDistance.value = dist;
+            } 
+            
+            window.alert("Поїздку успішно створено.");
+        }
+
+        function showMap() {
+            // Якщо одна з адрес не вибрана, не продовжуйте
+            if (!address1Coordinates || !address2Coordinates) {
+                return;
+            }
+        // Переключення видимості між картами
+        document.getElementById("defaultMap").hidden = true;
+        document.getElementById("map").hidden = false;
+
+            // Ініціалізація карти Leaflet з використанням координат, отриманих з вибраних адрес
+            map = L.map('map').setView([address1Coordinates.latitude, address1Coordinates.longitude], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            L.marker([address1Coordinates.latitude, address1Coordinates.longitude]).addTo(map)
+            .bindPopup('DepartureLocation');
+
+            L.marker([address2Coordinates.latitude, address2Coordinates.longitude]).addTo(map)
+            .bindPopup('ArrivalLocation');
+
+            var address11Coordinates = [address1Coordinates.latitude, address1Coordinates.longitude];
+            var address22Coordinates = [address2Coordinates.latitude, address2Coordinates.longitude];
+
+            // Haversine formula to calculate distance between two points
+            function haversine(lat1, lon1, lat2, lon2) {
+                var R = 6371; // Radius of the Earth in kilometers
+                var dLat = (lat2 - lat1) * Math.PI / 180;
+                var dLon = (lon2 - lon1) * Math.PI / 180;
+                var a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                var distance = R * c;
+                return distance;
+            }
+
+            // Calculate and display distance
+            var distance = haversine(address11Coordinates[0], address11Coordinates[1], address22Coordinates[0], address22Coordinates[1]);
+            console.log('Distance between Address 1 and Address 2: ' + distance.toFixed(2) + ' km');
+            const inputDistance = document.getElementById('Distance');
+            inputDistance.value = distance.toFixed(0) + ' км';
+            dist = distance.toFixed(0);
+        }
+    </script>
+
+</body>

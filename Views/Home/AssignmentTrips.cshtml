@@ -1,0 +1,50 @@
+﻿@model IEnumerable<SearchForDriversWebApp.Models.Assignment>
+
+<body style="background-color: #EBEFF2;">
+
+    <h2 class="text-center">Перегляд поїздок</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>Відстань</th>
+                <th>Ціна</th>
+                <th>Ім'я користувача</th>
+                <th>Дії</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var assignment in Model)
+            {
+                var username = ViewBag.Usernames != null && ViewBag.Usernames.ContainsKey(assignment.Trip.UserId)
+                ? ViewBag.Usernames[assignment.Trip.UserId]
+                : "N/A";
+                <tr>
+                    <td>@assignment.Trip.DepartureLocation</td>
+                    <td>@assignment.Trip.ArrivalLocation</td>
+                    <td>@assignment.Trip.Distance</td>
+                    <td>@assignment.Price</td>
+                    <td>@username</td>
+                    <td>
+                        @if (assignment.Trip.Status == "Водій очікує на вас")
+                        {
+                            <button class="btn btn-warning" disabled>Водій очікує на вас</button>
+                        }
+                        else
+                        {
+                            <form method="post" action="@Url.Action("ChangeStatus", "Home")">
+                                <input type="hidden" name="tripId" value="@assignment.Trip.Id" />
+                                <button type="submit" class="btn btn-success">Змінити статус</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+
+<br />
